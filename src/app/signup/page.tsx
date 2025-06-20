@@ -1,58 +1,46 @@
+
 'use client';
 
 import { AuthForm } from '@/components/auth/auth-form';
 import AuthLayout from '@/app/auth-layout';
 import React from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation'; // Corrected import
-
-// Placeholder for signup server action
-async function signupUser(values: any) {
-  console.log('Signup attempt with:', values);
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  // Simulate success
-  return { success: true, message: 'Account created successfully! Please log in.' };
-}
-
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth-context'; // Import useAuth
 
 export default function SignupPage() {
-  const [loading, setLoading] = React.useState(false);
+  const [pageLoading, setPageLoading] = React.useState(false); // Renamed to avoid conflict
   const { toast } = useToast();
   const router = useRouter();
+  const { signup, loading: authLoading } = useAuth(); // Get signup function and auth loading state
 
   const handleSignup = async (values: any) => {
-    setLoading(true);
+    setPageLoading(true);
     try {
-      // Replace with actual signup logic
-      const result = await signupUser(values); // Using placeholder
-       if (result.success) {
+      const user = await signup(values.email, values.password, values.name);
+      if (user) {
         toast({
           title: 'Account Created!',
-          description: result.message,
+          description: 'Account created successfully! Please log in.',
         });
         router.push('/login'); // Redirect to login after signup
-      } else {
-        toast({
-          title: 'Signup Failed',
-          description: result.message || 'Could not create account.',
-          variant: 'destructive',
-        });
       }
+      // Error handling is done within the auth context's signup function using toast
     } catch (error) {
+      // This catch block might be redundant if auth context handles all errors
       toast({
         title: 'An error occurred',
         description: 'Please try again later.',
         variant: 'destructive',
       });
-      console.error('Signup error:', error);
+      console.error('Signup page error:', error);
     }
-    setLoading(false);
+    setPageLoading(false);
   };
 
   return (
     <AuthLayout>
-      <AuthForm type="signup" onSubmit={handleSignup} loading={loading} />
+      <AuthForm type="signup" onSubmit={handleSignup} loading={pageLoading || authLoading} />
     </AuthLayout>
   );
 }

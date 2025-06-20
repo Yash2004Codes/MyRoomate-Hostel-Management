@@ -1,61 +1,46 @@
+
 'use client';
 
 import { AuthForm } from '@/components/auth/auth-form';
 import AuthLayout from '@/app/auth-layout';
 import React from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation'; // Corrected import
-
-// Placeholder for login server action
-async function loginUser(values: any) {
-  console.log('Login attempt with:', values);
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  // Simulate success/failure
-  if (values.email === 'test@example.com' && values.password === 'password') {
-    return { success: true, message: 'Login successful!' };
-  }
-  return { success: false, message: 'Invalid email or password.' };
-}
-
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth-context'; // Import useAuth
 
 export default function LoginPage() {
-  const [loading, setLoading] = React.useState(false);
+  const [pageLoading, setPageLoading] = React.useState(false); // Renamed to avoid conflict
   const { toast } = useToast();
   const router = useRouter();
+  const { login, loading: authLoading } = useAuth(); // Get login function and auth loading state
 
   const handleLogin = async (values: any) => {
-    setLoading(true);
+    setPageLoading(true);
     try {
-      // Replace with actual login logic (e.g., Firebase, NextAuth, custom API)
-      const result = await loginUser(values); // Using the placeholder
-      if (result.success) {
+      const user = await login(values.email, values.password);
+      if (user) {
         toast({
           title: 'Logged In!',
-          description: result.message,
+          description: 'Login successful!',
         });
-        router.push('/search'); // Redirect to search page on successful login
-      } else {
-        toast({
-          title: 'Login Failed',
-          description: result.message,
-          variant: 'destructive',
-        });
+        router.push('/search'); // Redirect to search page
       }
+      // Error handling is done within the auth context's login function using toast
     } catch (error) {
+      // This catch block might be redundant if auth context handles all errors
       toast({
         title: 'An error occurred',
         description: 'Please try again later.',
         variant: 'destructive',
       });
-      console.error('Login error:', error);
+      console.error('Login page error:', error);
     }
-    setLoading(false);
+    setPageLoading(false);
   };
 
   return (
     <AuthLayout>
-      <AuthForm type="login" onSubmit={handleLogin} loading={loading} />
+      <AuthForm type="login" onSubmit={handleLogin} loading={pageLoading || authLoading} />
     </AuthLayout>
   );
 }

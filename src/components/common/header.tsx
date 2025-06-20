@@ -1,28 +1,29 @@
+
 'use client';
 
 import Link from 'next/link';
-import { Home, Search, Sparkles, UserCircle, LogIn, UserPlus } from 'lucide-react';
+import { Home, Search, Sparkles, UserCircle, LogIn, UserPlus, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-
-// Mock authentication state hook (replace with actual auth later)
-const useAuth = () => {
-  // const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  // For UI development, let's assume not authenticated to show login/signup
-  // In a real app, this would come from your auth provider context
-  return { isAuthenticated: false, user: null }; 
-};
+import { useAuth } from '@/context/auth-context'; // Use the real AuthContext
+import React from 'react';
 
 export function Header() {
   const pathname = usePathname();
-  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const { currentUser, logout, loading } = useAuth(); // Get user, logout, and loading state
 
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/search', label: 'Search', icon: Search },
     { href: '/smart-match', label: 'Smart Match', icon: Sparkles },
   ];
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/'); // Redirect to home after logout
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
@@ -49,16 +50,14 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center space-x-2">
-          {isAuthenticated ? (
+          {loading ? (
+            <div className="h-8 w-20 animate-pulse bg-muted rounded-md"></div>
+          ) : currentUser ? (
             <>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="/profile"> {/* Placeholder for profile page */}
-                  <UserCircle className="h-6 w-6" />
-                  <span className="sr-only">Profile</span>
-                </Link>
-              </Button>
-              <Button variant="outline" size="sm">
-                Logout
+              {/* You can add a profile link/dropdown here later */}
+              <span className="text-sm text-foreground/80 hidden sm:inline">Hi, {currentUser.displayName || currentUser.email?.split('@')[0]}</span>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" /> Logout
               </Button>
             </>
           ) : (
