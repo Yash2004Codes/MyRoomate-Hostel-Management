@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -8,8 +9,9 @@ import { MapView } from '@/components/accommodations/map-view';
 import type { Accommodation } from '@/types';
 import { getAllAccommodations, getCollegeCoordinates } from '@/lib/accommodations';
 import { Button } from '@/components/ui/button';
-import { LayoutGrid, List, Loader2, Frown } from 'lucide-react';
+import { LayoutGrid, List, Loader2, Frown, Search } from 'lucide-react'; // Added Search icon
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card } from '@/components/ui/card'; // Added Card import
 
 const ITEMS_PER_PAGE = 9;
 
