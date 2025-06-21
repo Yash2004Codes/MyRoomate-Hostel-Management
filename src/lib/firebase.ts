@@ -1,6 +1,6 @@
 
-import { initializeApp, getApps, getApp, type FirebaseOptions } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { initializeApp, getApps, getApp, type FirebaseOptions, type FirebaseApp } from 'firebase/app';
+import { getAuth, type Auth } from 'firebase/auth';
 // import { getFirestore } from 'firebase/firestore'; // Example if you need Firestore
 // import { getStorage } from 'firebase/storage'; // Example if you need Storage
 
@@ -13,10 +13,17 @@ const firebaseConfig: FirebaseOptions = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
-// const db = getFirestore(app); // Example
-// const storage = getStorage(app); // Example
+// Conditionally initialize Firebase.
+// During the build process on services like Netlify, env vars might be undefined.
+// This prevents the build from crashing with an "invalid-api-key" error.
+const app: FirebaseApp | null = getApps().length
+  ? getApp()
+  : firebaseConfig.apiKey
+  ? initializeApp(firebaseConfig)
+  : null;
+
+const auth: Auth | null = app ? getAuth(app) : null;
+// const db = app ? getFirestore(app) : null; // Example
+// const storage = app ? getStorage(app) : null; // Example
 
 export { app, auth /*, db, storage */ };

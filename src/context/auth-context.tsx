@@ -37,6 +37,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { toast } = useToast();
 
   useEffect(() => {
+    if (!auth) {
+      console.error("Firebase is not initialized. Check your environment variables.");
+      setLoading(false);
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
@@ -45,6 +50,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const signup = async (email: string, password: string, displayName: string): Promise<FirebaseUser | null> => {
+    if (!auth) {
+      toast({ title: 'Signup Failed', description: 'Firebase is not configured correctly.', variant: 'destructive' });
+      return null;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -63,6 +72,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const login = async (email: string, password: string): Promise<FirebaseUser | null> => {
+    if (!auth) {
+      toast({ title: 'Login Failed', description: 'Firebase is not configured correctly.', variant: 'destructive' });
+      return null;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -79,6 +92,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = async () => {
+    if (!auth) {
+      toast({ title: 'Logout Failed', description: 'Firebase is not configured correctly.', variant: 'destructive' });
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -86,7 +103,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setCurrentUser(null);
       setLoading(false);
       toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
-    } catch (err) {
+    } catch (err)
+      {
       setError(err as AuthError);
       setLoading(false);
       toast({ title: 'Logout Failed', description: (err as AuthError).message, variant: 'destructive' });
