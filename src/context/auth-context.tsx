@@ -4,7 +4,7 @@
 import type { User as FirebaseUser, AuthError } from 'firebase/auth';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { auth } from '@/lib/firebase'; // Ensure this path is correct
+import { getFirebaseAuth } from '@/lib/firebase'; // Import the new function
 import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
@@ -37,8 +37,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { toast } = useToast();
 
   useEffect(() => {
+    const auth = getFirebaseAuth(); // Get auth instance lazily
     if (!auth) {
-      console.error("Firebase is not initialized. Check your environment variables.");
+      // This can happen if the API keys are not set in the environment.
+      console.error("Firebase could not be initialized. Check your environment variables.");
       setLoading(false);
       return;
     }
@@ -50,6 +52,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const signup = async (email: string, password: string, displayName: string): Promise<FirebaseUser | null> => {
+    const auth = getFirebaseAuth(); // Get auth instance
     if (!auth) {
       toast({ title: 'Signup Failed', description: 'Firebase is not configured correctly.', variant: 'destructive' });
       return null;
@@ -72,6 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const login = async (email: string, password: string): Promise<FirebaseUser | null> => {
+    const auth = getFirebaseAuth(); // Get auth instance
     if (!auth) {
       toast({ title: 'Login Failed', description: 'Firebase is not configured correctly.', variant: 'destructive' });
       return null;
@@ -92,6 +96,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = async () => {
+    const auth = getFirebaseAuth(); // Get auth instance
     if (!auth) {
       toast({ title: 'Logout Failed', description: 'Firebase is not configured correctly.', variant: 'destructive' });
       return;
@@ -120,5 +125,5 @@ export function AuthProvider({ children }: AuthProviderProps) {
     logout,
   };
 
-  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

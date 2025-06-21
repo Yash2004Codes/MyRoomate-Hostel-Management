@@ -13,17 +13,34 @@ const firebaseConfig: FirebaseOptions = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Conditionally initialize Firebase.
-// During the build process on services like Netlify, env vars might be undefined.
-// This prevents the build from crashing with an "invalid-api-key" error.
-const app: FirebaseApp | null = getApps().length
-  ? getApp()
-  : firebaseConfig.apiKey
-  ? initializeApp(firebaseConfig)
-  : null;
+// Singleton instances
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
 
-const auth: Auth | null = app ? getAuth(app) : null;
-// const db = app ? getFirestore(app) : null; // Example
-// const storage = app ? getStorage(app) : null; // Example
+/**
+ * Gets the Firebase Auth instance.
+ * Initializes Firebase if it's not already initialized.
+ * This is a "lazy" getter to avoid initialization errors during build/SSR.
+ */
+function getFirebaseAuth(): Auth | null {
+  if (auth) {
+    return auth;
+  }
 
-export { app, auth /*, db, storage */ };
+  if (!getApps().length) {
+    if (!firebaseConfig.apiKey) {
+      console.error("Firebase API key is missing. Firebase could not be initialized.");
+      return null;
+    }
+    app = initializeApp(firebaseConfig);
+  } else {
+    app = getApp();
+  }
+  
+  auth = getAuth(app);
+  return auth;
+}
+
+// We are not exporting app and auth directly anymore.
+// This ensures consumers use the lazy getter.
+export { getFirebaseAuth };
