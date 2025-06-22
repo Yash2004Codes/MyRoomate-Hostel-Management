@@ -19,12 +19,13 @@ function getFirebaseAuth(): Auth | null {
 
   // Build the config object at the moment it's needed.
   const firebaseConfig: FirebaseOptions = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    apiKey: "AIzaSyDnACaN7l02yzCvrQ5KA2oAeV5Cufhn9Cg",
+    authDomain: "myroomate-83928.firebaseapp.com",
+    projectId: "myroomate-83928",
+    storageBucket: "myroomate-83928.firebasestorage.app",
+    messagingSenderId: "1012441772273",
+    appId: "1:1012441772273:web:1101686655f9cafb317950",
+    measurementId: "G-Z88RYBQ6JW"
   };
 
   // Crucially, if the essential keys aren't present (e.g., during the build process),
