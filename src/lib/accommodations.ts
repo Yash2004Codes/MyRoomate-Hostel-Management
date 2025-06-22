@@ -3,6 +3,7 @@ import type { Accommodation, Amenity, AccommodationType } from '@/types';
 export const mockAccommodations: Accommodation[] = [
   {
     id: '1',
+    ownerId: 'owner-1',
     name: 'Sunrise Premium Hostel',
     address: '123 University Ave, College Town, CT 12345',
     collegeName: 'Central University',
@@ -25,6 +26,7 @@ export const mockAccommodations: Accommodation[] = [
   },
   {
     id: '2',
+    ownerId: 'owner-2',
     name: 'Scholars PG for Girls',
     address: '45 Main Street, College Town, CT 12346',
     collegeName: 'City College',
@@ -45,6 +47,7 @@ export const mockAccommodations: Accommodation[] = [
   },
   {
     id: '3',
+    ownerId: 'owner-1',
     name: 'Campus View Apartments',
     address: '789 College Rd, College Town, CT 12347',
     collegeName: 'Tech Institute',
@@ -66,6 +69,7 @@ export const mockAccommodations: Accommodation[] = [
   },
   {
     id: '4',
+    ownerId: 'owner-2',
     name: 'Budget Friendly Rooms',
     address: '10 Old Mill Lane, College Town, CT 12348',
     collegeName: 'Community College',
@@ -84,6 +88,7 @@ export const mockAccommodations: Accommodation[] = [
   },
   {
     id: '5',
+    ownerId: 'owner-1',
     name: 'The Study Nook PG (Co-ed)',
     address: '22 Academy St, College Town, CT 12345',
     collegeName: 'Central University',
@@ -422,6 +427,12 @@ export async function getAccommodationById(id: string): Promise<Accommodation | 
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 200));
   return mockAccommodations.find(acc => acc.id === id);
+}
+
+export async function getAccommodationsByOwnerId(ownerId: string): Promise<Accommodation[]> {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 300));
+  return mockAccommodations.filter(acc => acc.ownerId === ownerId);
 }
 
 export async function getAllAccommodations(filters?: any): Promise<Accommodation[]> {

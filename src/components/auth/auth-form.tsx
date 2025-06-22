@@ -22,6 +22,7 @@ interface AuthFormProps {
   type: 'login' | 'signup';
   onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>;
   loading: boolean;
+  userType?: 'student' | 'owner';
 }
 
 const formSchemaBase = {
@@ -41,7 +42,7 @@ const signupSchema = z.object({
 const loginSchema = z.object(formSchemaBase);
 
 
-export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
+export function AuthForm({ type, onSubmit, loading, userType = 'student' }: AuthFormProps) {
   const formSchema = type === 'signup' ? signupSchema : loginSchema;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,15 +54,19 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
   });
 
   const isSignup = type === 'signup';
+  const isOwner = userType === 'owner';
 
   return (
     <Card className="w-full max-w-md shadow-2xl">
       <CardHeader>
         <CardTitle className="text-3xl font-headline text-center text-primary">
-          {isSignup ? 'Create Account' : 'Welcome Back!'}
+          {isOwner ? (isSignup ? 'Owner Registration' : 'Owner Login') : (isSignup ? 'Create Account' : 'Welcome Back!')}
         </CardTitle>
         <CardDescription className="text-center">
-          {isSignup ? 'Join College Cribs to find your perfect stay.' : 'Log in to continue your search.'}
+           {isOwner 
+            ? 'Access your dashboard to manage your listings.'
+            : (isSignup ? 'Join College Cribs to find your perfect stay.' : 'Log in to continue your search.')
+           }
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -89,7 +94,7 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                 <FormItem>
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="you@college.edu" {...field} />
+                    <Input type="email" placeholder="you@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -134,19 +139,26 @@ export function AuthForm({ type, onSubmit, loading }: AuthFormProps) {
                 <>
                   Already have an account?{' '}
                   <Button variant="link" asChild className="p-0 h-auto">
-                    <Link href="/login">Log in</Link>
+                    <Link href={isOwner ? "/owner/login" : "/login"}>Log in</Link>
                   </Button>
                 </>
               ) : (
                 <>
                   Don&apos;t have an account?{' '}
                   <Button variant="link" asChild className="p-0 h-auto">
-                    <Link href="/signup">Sign up</Link>
+                    <Link href={isOwner ? "/owner/signup" : "/signup"}>Sign up</Link>
                   </Button>
                 </>
               )}
             </p>
-            {/* Optional: OAuth buttons can be added here */}
+             <p className="text-xs text-center text-muted-foreground mt-2">
+                {isOwner ? "Looking for student accommodation?" : "Are you a property owner?"}{' '}
+                <Button variant="link" asChild className="p-0 h-auto text-xs">
+                    <Link href={isOwner ? "/login" : "/owner/login"}>
+                        {isOwner ? "Student Login" : "Owner Login"}
+                    </Link>
+                </Button>
+            </p>
           </CardFooter>
         </form>
       </Form>

@@ -13,6 +13,7 @@ export type AccommodationType = "PG" | "Hostel" | "Apartment" | "Room";
 
 export interface Accommodation {
   id: string;
+  ownerId?: string; // To link accommodation to a user
   name: string;
   address: string;
   collegeName?: string; // For map centering and relevance
