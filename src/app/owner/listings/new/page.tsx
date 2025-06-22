@@ -76,6 +76,3 @@ export default function NewListingPage() {
     </main>
   );
 }
-
-// We need to add uuid to our dependencies
-// In a real app, you'd run `npm install uuid && npm install @types/uuid -D`
