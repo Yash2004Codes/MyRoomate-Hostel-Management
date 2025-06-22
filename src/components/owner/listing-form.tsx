@@ -16,6 +16,7 @@ import React from "react";
 import type { Accommodation, Amenity, AccommodationType } from "@/types";
 import { allAmenities, accommodationTypes } from "@/lib/accommodations";
 import Image from "next/image";
+import { Label } from "@/components/ui/label";
 
 interface ListingFormProps {
     initialData?: Accommodation | null;
