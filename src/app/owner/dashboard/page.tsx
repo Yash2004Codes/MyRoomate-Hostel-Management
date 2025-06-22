@@ -80,9 +80,9 @@ export default function OwnerDashboardPage() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-4xl font-headline text-primary">Your Dashboard</h1>
-        <div className="flex gap-2">
+        <div className="flex gap-2 self-end sm:self-center">
            <Button variant="outline" size="icon" onClick={fetchListings} aria-label="Refresh listings">
              <RefreshCw className="h-5 w-5"/>
            </Button>
