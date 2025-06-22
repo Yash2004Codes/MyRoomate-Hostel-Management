@@ -8,8 +8,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Check, Star, Zap, Loader2 } from 'lucide-react';
+import { Check, Star, Zap, Loader2, QrCode } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const plans = [
   {
@@ -48,13 +49,13 @@ export default function BillingPage() {
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    // Simulate API call
+    // Simulate API call for verifying transaction ID
     setTimeout(() => {
       setIsProcessing(false);
       setIsDialogOpen(false);
       toast({
         title: 'Upgrade Successful!',
-        description: 'You are now on the Premium plan.',
+        description: 'Your payment has been confirmed. You are now on the Premium plan.',
       });
       // Here you would typically update the user's state in your database
     }, 2000);
@@ -96,35 +97,43 @@ export default function BillingPage() {
                         <Star className="mr-2 h-5 w-5" /> {plan.cta}
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
+                    <DialogContent className="sm:max-w-sm">
                       <DialogHeader>
-                        <DialogTitle className="font-headline text-2xl">Upgrade to Premium</DialogTitle>
-                        <DialogDescription>
-                          Enter your payment details to unlock all premium features. This is a simulation.
+                        <DialogTitle className="font-headline text-2xl flex items-center justify-center sm:justify-start">
+                          <QrCode className="mr-2 h-6 w-6"/> Scan to Pay
+                        </DialogTitle>
+                        <DialogDescription className="text-center sm:text-left">
+                          Upgrade to Premium by paying {plan.price} via UPI.
                         </DialogDescription>
                       </DialogHeader>
                       <form onSubmit={handlePayment} className="grid gap-4 py-4">
+                        <div className="flex flex-col items-center justify-center">
+                           <Image
+                            src="https://placehold.co/250x250.png"
+                            alt="UPI QR Code Placeholder"
+                            width={250}
+                            height={250}
+                            className="rounded-lg border p-1"
+                            data-ai-hint="qr code"
+                          />
+                           <p className="text-sm text-muted-foreground mt-2">
+                             Scan this with any UPI app to pay.
+                           </p>
+                        </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="card-number">Card Number</Label>
-                          <Input id="card-number" placeholder="1234 5678 9012 3456" />
+                          <Label htmlFor="transaction-id">UPI Transaction ID</Label>
+                          <Input id="transaction-id" placeholder="Enter ID to confirm payment" required />
+                          <p className="text-xs text-muted-foreground">
+                            After paying, enter the transaction ID from your UPI app.
+                          </p>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="grid gap-2">
-                            <Label htmlFor="expiry-date">Expiry Date</Label>
-                            <Input id="expiry-date" placeholder="MM/YY" />
-                          </div>
-                          <div className="grid gap-2">
-                            <Label htmlFor="cvc">CVC</Label>
-                            <Input id="cvc" placeholder="123" />
-                          </div>
-                        </div>
-                         <Button type="submit" size="lg" className="w-full mt-4" disabled={isProcessing}>
+                         <Button type="submit" size="lg" className="w-full mt-2" disabled={isProcessing}>
                           {isProcessing ? (
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                           ) : (
-                            <Zap className="mr-2 h-5 w-5" />
+                            <Check className="mr-2 h-5 w-5" />
                           )}
-                           Pay {plan.price}
+                           Confirm Payment
                         </Button>
                       </form>
                     </DialogContent>
