@@ -11,10 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, Save, PlusCircle } from "lucide-react";
+import { Loader2, Save, PlusCircle, Upload, X, FileVideo } from "lucide-react";
 import React from "react";
 import type { Accommodation, Amenity, AccommodationType } from "@/types";
 import { allAmenities, accommodationTypes } from "@/lib/accommodations";
+import Image from "next/image";
 
 interface ListingFormProps {
     initialData?: Accommodation | null;
@@ -38,7 +39,8 @@ const formSchema = z.object({
   }),
   availability: z.enum(["available", "limited", "full"]),
   gender: z.enum(["male", "female", "co-ed"]).optional(),
-  rules: z.string().optional(), // Storing as a comma-separated string in the form
+  rules: z.string().optional(),
+  images: z.array(z.string()).min(1, "Please upload at least one image."),
 });
 
 type ListingFormValues = z.infer<typeof formSchema>;
@@ -63,15 +65,50 @@ export function ListingForm({ initialData, onSubmit, isSubmitting }: ListingForm
     availability: initialData?.availability || "available",
     gender: initialData?.gender || "co-ed",
     rules: (initialData?.rules || []).join(', '),
+    images: initialData?.images || [],
   };
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
+  
+  const handleFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: string[]) => void,
+    currentValue: string[] = []
+  ) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newFilePromises = Array.from(files).map(file => {
+        return new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => resolve(event.target?.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    });
+
+    try {
+        const newFileResults = await Promise.all(newFilePromises);
+        onChange([...currentValue, ...newFileResults]);
+    } catch (error) {
+        console.error("Error reading files:", error);
+        // You could add a toast notification here for the user
+    }
+  };
+
+  const handleRemoveImage = (
+      index: number,
+      onChange: (value: string[]) => void,
+      currentValue: string[] = []
+  ) => {
+      const newValue = currentValue.filter((_, i) => i !== index);
+      onChange(newValue);
+  };
 
   const handleFormSubmit = (values: ListingFormValues) => {
-    // Convert rules from string back to array
     const submissionData = {
         ...values,
         rules: values.rules ? values.rules.split(',').map(r => r.trim()).filter(r => r) : [],
@@ -114,6 +151,67 @@ export function ListingForm({ initialData, onSubmit, isSubmitting }: ListingForm
                     <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea placeholder="Describe what makes your place great for students..." {...field} rows={5}/></FormControl><FormMessage /></FormItem>
                 )}/>
             </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Photos & Videos</CardTitle>
+            <CardDescription>Upload at least one photo. The first photo will be the main cover image.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div>
+                      <Label htmlFor="file-upload" className="cursor-pointer w-full">
+                        <div className="flex items-center justify-center w-full p-4 border-2 border-dashed rounded-lg text-muted-foreground hover:bg-muted/50 hover:border-primary transition-colors">
+                          <Upload className="w-6 h-6 mr-2" />
+                          <span>Click to upload media</span>
+                        </div>
+                      </Label>
+                      <Input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*,video/*"
+                        multiple
+                        onChange={(e) => handleFileChange(e, field.onChange, field.value)}
+                        className="hidden"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                  {field.value && field.value.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                      {field.value.map((src, index) => (
+                        <div key={index} className="relative group aspect-video">
+                          {src.startsWith('data:image') ? (
+                            <Image src={src} alt={`Preview ${index + 1}`} layout="fill" objectFit="cover" className="rounded-md" />
+                          ) : (
+                            <div className="flex flex-col items-center justify-center w-full h-full bg-muted rounded-md p-2">
+                              <FileVideo className="w-8 h-8 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground mt-1 text-center" >Video Preview</span>
+                            </div>
+                          )}
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => handleRemoveImage(index, field.onChange, field.value)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </FormItem>
+              )}
+            />
+          </CardContent>
         </Card>
 
         <Card>
