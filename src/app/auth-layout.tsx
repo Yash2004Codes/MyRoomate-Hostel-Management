@@ -11,7 +11,7 @@ export default function AuthLayout({
          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8">
             <path d="M12 2L1 9.78V22h7v-6h8v6h7V9.78L12 2zm0 3.47L18.94 10H5.06L12 5.47zM9 14v6H4v-7.31l5-3.63zm11 6h-5v-6l5-3.63V20z"/>
           </svg>
-        <span className="font-headline text-2xl font-bold">College Cribs</span>
+        <span className="font-headline text-2xl font-bold">CollegeRooms</span>
       </Link>
       {children}
     </div>

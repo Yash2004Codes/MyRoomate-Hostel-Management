@@ -54,7 +54,7 @@ export default function SmartMatchPage() {
               <Sparkles className="mx-auto h-12 w-12 text-primary mb-2 animate-pulse" />
               <CardTitle className="text-4xl font-headline">AI Smart Match</CardTitle>
               <CardDescription className="text-lg text-foreground/80">
-                Let our AI find the perfect crib for you based on your preferences.
+                Let our AI find the perfect room for you based on your preferences.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6 md:p-8">
@@ -117,7 +117,7 @@ export default function SmartMatchPage() {
         </div>
       </main>
        <footer className="py-6 text-center text-sm text-muted-foreground border-t">
-        © {new Date().getFullYear()} College Cribs. AI-Powered Housing.
+        © {new Date().getFullYear()} CollegeRooms. AI-Powered Housing.
       </footer>
     </div>
   );

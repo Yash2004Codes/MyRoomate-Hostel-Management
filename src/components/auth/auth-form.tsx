@@ -65,7 +65,7 @@ export function AuthForm({ type, onSubmit, loading, userType = 'student' }: Auth
         <CardDescription className="text-center">
            {isOwner 
             ? 'Access your dashboard to manage your listings.'
-            : (isSignup ? 'Join College Cribs to find your perfect stay.' : 'Log in to continue your search.')
+            : (isSignup ? 'Join CollegeRooms to find your perfect stay.' : 'Log in to continue your search.')
            }
         </CardDescription>
       </CardHeader>

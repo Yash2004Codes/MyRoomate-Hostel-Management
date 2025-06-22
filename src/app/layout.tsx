@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AppProviders } from '@/components/app-providers';
 
 export const metadata: Metadata = {
-  title: 'College Cribs',
+  title: 'CollegeRooms',
   description: 'Find your perfect accommodation near college.',
 };
 

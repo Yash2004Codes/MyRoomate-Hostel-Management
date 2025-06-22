@@ -12,7 +12,7 @@ export default function OwnerLayout({
         {children}
       </div>
        <footer className="py-6 text-center text-sm text-muted-foreground border-t mt-8">
-        © {new Date().getFullYear()} College Cribs. Owner Portal.
+        © {new Date().getFullYear()} CollegeRooms. Owner Portal.
       </footer>
     </div>
   );

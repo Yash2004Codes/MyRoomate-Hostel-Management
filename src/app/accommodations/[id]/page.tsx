@@ -227,7 +227,7 @@ export default async function AccommodationPage({ params }: AccommodationPagePro
         </Card>
       </main>
       <footer className="py-6 text-center text-sm text-muted-foreground border-t mt-8">
-        © {new Date().getFullYear()} College Cribs. Your Home Away From Home.
+        © {new Date().getFullYear()} CollegeRooms. Your Home Away From Home.
       </footer>
     </div>
   );

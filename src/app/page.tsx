@@ -14,7 +14,7 @@ export default function LandingPage() {
         <section className="py-20 md:py-32 bg-gradient-to-br from-primary/10 via-background to-accent/10">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-5xl md:text-7xl font-headline font-bold mb-6 text-primary animate-fade-in">
-              Find Your <span className="text-accent-foreground">Perfect</span> College Crib
+              Find Your <span className="text-accent-foreground">Perfect</span> College Room
             </h1>
             <p className="text-xl md:text-2xl text-foreground/80 mb-10 max-w-3xl mx-auto animate-fade-in animation-delay-300">
               Discover the best PGs, hostels, and apartments near your campus.
@@ -39,7 +39,7 @@ export default function LandingPage() {
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-headline font-semibold text-center mb-12 text-primary-foreground bg-primary py-2 px-4 inline-block rounded-md shadow-md">
-              Why Choose College Cribs?
+              Why Choose CollegeRooms?
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               {[
@@ -99,9 +99,9 @@ export default function LandingPage() {
         {/* Call to Action Section */}
         <section className="py-20 bg-accent/20">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-4xl font-headline font-semibold mb-6 text-primary">Ready to Find Your Crib?</h2>
+            <h2 className="text-4xl font-headline font-semibold mb-6 text-primary">Ready to Find Your Room?</h2>
             <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
-              Join thousands of students who found their ideal accommodation with College Cribs.
+              Join thousands of students who found their ideal accommodation with CollegeRooms.
             </p>
             <Button size="lg" asChild className="transform transition-transform hover:scale-105 shadow-lg">
               <Link href="/signup">
@@ -114,7 +114,7 @@ export default function LandingPage() {
 
       <footer className="py-8 bg-gray-800 text-gray-300 text-center">
         <div className="container mx-auto px-4">
-          <p>&copy; {new Date().getFullYear()} College Cribs. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} CollegeRooms. All rights reserved.</p>
           <p className="text-sm">Your hassle-free student housing solution.</p>
         </div>
       </footer>

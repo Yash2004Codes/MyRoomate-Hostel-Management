@@ -74,7 +74,7 @@ export function MapView({ accommodations, collegeLocation, apiKey }: MapViewProp
           defaultZoom={collegeLocation ? 13 : 5}
           gestureHandling={'greedy'}
           disableDefaultUI={true}
-          mapId="college_cribs_map" // Optional: For custom map styling in Google Cloud Console
+          mapId="college_rooms_map" // Optional: For custom map styling in Google Cloud Console
         >
           {collegeLocation && (
             <Marker
