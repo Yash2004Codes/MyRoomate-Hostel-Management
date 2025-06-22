@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Accommodation } from '@/types';
@@ -6,12 +7,24 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DollarSign, Edit, Eye, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface AccommodationRowProps {
   accommodation: Accommodation;
+  onDelete: (id: string) => Promise<void>;
 }
 
-export function AccommodationRow({ accommodation }: AccommodationRowProps) {
+export function AccommodationRow({ accommodation, onDelete }: AccommodationRowProps) {
   const statusColors = {
     available: 'bg-green-100 text-green-700 hover:bg-green-200',
     limited: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200',
@@ -47,14 +60,35 @@ export function AccommodationRow({ accommodation }: AccommodationRowProps) {
                 <span className="sr-only">View</span>
             </Link>
         </Button>
-        <Button variant="outline" size="icon" aria-label="Edit Listing">
-            <Edit className="h-4 w-4" />
-            <span className="sr-only">Edit</span>
+        <Button variant="outline" size="icon" asChild>
+            <Link href={`/owner/listings/edit/${accommodation.id}`} aria-label="Edit Listing">
+              <Edit className="h-4 w-4" />
+              <span className="sr-only">Edit</span>
+            </Link>
         </Button>
-        <Button variant="destructive" size="icon" aria-label="Delete Listing">
-            <Trash2 className="h-4 w-4" />
-            <span className="sr-only">Delete</span>
-        </Button>
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="icon" aria-label="Delete Listing">
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Delete</span>
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete your
+                        listing and remove its data from our servers.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => onDelete(accommodation.id)}>
+                        Yes, delete listing
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
