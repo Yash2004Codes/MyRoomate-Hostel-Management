@@ -1,7 +1,8 @@
+
 'use client';
 
 import Link from 'next/link';
-import { Home, Search, Sparkles, UserCircle, LogIn, UserPlus, LogOut, Building, Menu } from 'lucide-react';
+import { Home, Search, Sparkles, UserCircle, LogIn, UserPlus, LogOut, Building, Menu, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -102,6 +103,10 @@ export function Header() {
                     <Building className="mr-2 h-4 w-4" />
                     <span>Owner Dashboard</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/owner/billing')}>
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    <span>Billing</span>
+                </DropdownMenuItem>
                  <DropdownMenuItem onClick={() => router.push('/profile')}>
                     <UserCircle className="mr-2 h-4 w-4" />
                     <span>Profile</span>
@@ -176,6 +181,13 @@ export function Header() {
                        <div className="text-left">
                           <p className="font-semibold">{currentUser.displayName}</p>
                           <p className="text-sm text-muted-foreground mb-4">{currentUser.email}</p>
+                          <SheetClose asChild>
+                             <Link href="/profile" className="w-full mb-2">
+                                <Button variant="outline" className="w-full">
+                                  <UserCircle className="mr-2 h-4 w-4"/> Profile
+                                </Button>
+                             </Link>
+                          </SheetClose>
                           <SheetClose asChild>
                             <Button variant="destructive" onClick={handleLogout} className="w-full">
                               <LogOut className="mr-2 h-4 w-4"/> Log Out

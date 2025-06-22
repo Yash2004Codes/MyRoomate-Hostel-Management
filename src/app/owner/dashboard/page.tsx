@@ -96,7 +96,15 @@ export default function OwnerDashboardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center"><Building className="mr-3 h-6 w-6"/>My Listings</CardTitle>
+          <div className="flex flex-wrap justify-between items-center gap-2">
+            <CardTitle className="flex items-center"><Building className="mr-3 h-6 w-6"/>My Listings</CardTitle>
+            <div className="text-right">
+                <p className="text-sm font-semibold">Current Plan: <span className="text-primary font-bold">Free</span></p>
+                <Button variant="link" asChild className="p-0 h-auto text-xs">
+                    <Link href="/owner/billing">Upgrade to Premium</Link>
+                </Button>
+            </div>
+          </div>
           <CardDescription>Here you can view, edit, and manage your accommodation listings.</CardDescription>
         </CardHeader>
         <CardContent>
